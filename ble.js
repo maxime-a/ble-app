@@ -104,7 +104,7 @@ async function readStatus(){
   console.log(statusWord);
   console.log(statusWord[0]);
   console.log(statusWord[1]);
-  document.getElementById('status').innerHTML = "0x"+buf.toString();
+  document.getElementById('status').innerHTML = "0x"+statusWord.toString();
   return statusWord;
 }
 
@@ -114,7 +114,7 @@ async function readActuators(){
   console.log(statusWord);
   console.log(statusWord[0]);
   console.log(statusWord[1]);
-  document.getElementById('actuators').innerHTML = "0x"+buf.toString();
+  document.getElementById('actuators').innerHTML = "0x"+statusWord.toString();
   return statusWord;
 }
 
