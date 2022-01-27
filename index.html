@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="ble.js"></script>
     <title>Web Bluetooth</title>
   </head>
@@ -47,5 +48,9 @@
       <h4>Service : Measurements</h4>
       MeasurementsNotif : <label id="measurementsNotify">0x????????????????????????????????????</label>
     </div>
+    <div style="margin-top:25px;"><label id="temperature">??°C</label></div>
+    
+    <div id="myChart" style="max-width:700px; height:400px"></div>
+
   </body>
 </html>

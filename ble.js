@@ -11,6 +11,27 @@ var myCharacteristic2 = 0x0301;
 var characteristicStatus;
 var characteristicActuators;
 
+var tempTable;
+
+google.charts.load('current',{packages:['corechart']}).then(function(){
+  tempTable = new google.visualization.DataTable();
+  tempTable.addColumn('datetime', 'Time of Day');
+  tempTable.addColumn('number', 'Temperature');});
+//google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+  // Set Options
+  var options = {
+    title: 'Temperature',
+    hAxis: {title: 'Time'},
+    vAxis: {title: 'Temperature in degrees celsius'},
+    legend: 'none'
+  };
+  // Draw
+  var chart = new google.visualization.LineChart(document.getElementById('myChart'));
+  chart.draw(tempTable, options);
+}
+
 async function connect() {
   // Validate services UUID entered by user first.
   let servicesNeeded = [myService,myService2];
@@ -96,8 +117,12 @@ function handleDataMeasurements(event) {
   // get the data buffer from the meter:
   var buf = new Uint8Array(event.target.value.buffer);
   document.getElementById('measurementsNotify').innerHTML = "0x"+buf.toString();
+  document.getElementById('temperature').innerHTML = ((buf[17]*255+buf[18])/10).toString() + "°C";
+  tempTable.addRow([new Date(), ((buf[17]*255+buf[18])/10)]);
+  drawChart();
 }
 
+// read buttons handlers
 async function readStatus(){
   var value = await characteristicStatus.readValue();
   let statusWord = new Uint8Array(value.buffer);
@@ -118,6 +143,7 @@ async function readActuators(){
   return statusWord;
 }
 
+// switchs handlers
 async function modeChange(){
 
   
