@@ -5,11 +5,14 @@ https://googlechrome.github.io/samples/web-bluetooth/discover-services-and-chara
 var myDevice;
 var myService = 0x0100;        
 var myService2 = 0x0300;
+var myService3 = 0x0200;
 var myCharacteristic = 0x0103;   
 var myCharacteristic2 = 0x0301;
+var myCharacteristic3 = 0x0204;
 
 var characteristicStatus;
 var characteristicActuators;
+var characteristicCalendar;
 
 var tempTable;
 
@@ -34,7 +37,7 @@ function drawChart() {
 
 async function connect() {
   // Validate services UUID entered by user first.
-  let servicesNeeded = [myService,myService2];
+  let servicesNeeded = [myService,myService2,myService3];
 
   try {
     console.log('Requesting any Bluetooth Device...');
@@ -73,6 +76,10 @@ async function connect() {
           characteristic.startNotifications();
           subscribeToChangesActuators(characteristic);
         }
+        if(characteristic.uuid === "00000204-0000-1000-8000-00805f9b34fb")
+        {
+          characteristicCalendar=characteristic;
+        }
         if(characteristic.uuid === "00000301-0000-1000-8000-00805f9b34fb")
         {
           characteristic.startNotifications();
@@ -80,6 +87,8 @@ async function connect() {
         }
       });
     }
+    pageInit();
+
   } catch(error) {
     console.log('Argh! ' + error);
   }
@@ -97,6 +106,55 @@ function getSupportedProperties(characteristic) {
   return '[' + supportedProperties.join(', ') + ']';
 }
 
+// Called at the end of connection to read the characteristics and update the switches states accordingly
+async function pageInit() {
+  let statusWord = new Uint8Array(2);
+  
+  statusWord = await readStatus();
+  console.log('Read');
+  console.log(statusWord);
+
+  if(statusWord[1]&0b00000010)
+  {
+    document.getElementById('modeSwitch').checked = true;
+  }
+  else
+  {
+    document.getElementById('modeSwitch').checked = false;
+  }
+
+  let actuatorsWord = new Uint8Array(2);
+  
+  actuatorsWord = await readActuators();
+  console.log('Read');
+  console.log(actuatorsWord);
+
+  if(actuatorsWord[1]&0b00000001)
+  {
+    document.getElementById('fanSwitch').checked = true;
+  }
+  else
+  {
+    document.getElementById('fanSwitch').checked = false;
+  }
+  if(actuatorsWord[1]&0b00000010)
+  {
+    document.getElementById('co2Switch').checked = true;
+  }
+  else
+  {
+    document.getElementById('co2Switch').checked = false;
+  }
+  if(actuatorsWord[1]&0b00000100)
+  {
+    document.getElementById('lightSwitch').checked = true;
+  }
+  else
+  {
+    document.getElementById('lightSwitch').checked = false;
+  }
+}
+
 // subscribe to changes from the meter:
 function subscribeToChangesActuators(characteristic) {
   characteristic.oncharacteristicvaluechanged = handleDataActuators;
@@ -110,6 +168,30 @@ function subscribeToChangesMeasurements(characteristic) {
 function handleDataActuators(event) {
   // get the data buffer from the meter:
   var buf = new Uint8Array(event.target.value.buffer);
+  if(buf[1]&0b00000001)
+  {
+    document.getElementById('fanSwitch').checked = true;
+  }
+  else
+  {
+    document.getElementById('fanSwitch').checked = false;
+  }
+  if(buf[1]&0b00000010)
+  {
+    document.getElementById('co2Switch').checked = true;
+  }
+  else
+  {
+    document.getElementById('co2Switch').checked = false;
+  }
+  if(buf[1]&0b00000100)
+  {
+    document.getElementById('lightSwitch').checked = true;
+  }
+  else
+  {
+    document.getElementById('lightSwitch').checked = false;
+  }
   document.getElementById('actuatorsNotify').innerHTML = "0x"+buf.toString();
 }
 
@@ -267,5 +349,23 @@ function disconnect() {
     myDevice.gatt.disconnect();
     document.getElementById('measurementsNotify').innerHTML = "0x????";
     document.getElementById('measurementsNotify').innerHTML = "0x????????????????????????????????????";
+  }
+}
+
+async function setTime() {
+  const d = new Date();
+  let calendarWord = new Uint8Array(35);
+  calendarWord[11]=parseInt(d.getHours().toString(),16); //parseInt to convert d.getHours to bcd
+  calendarWord[12]=parseInt(d.getMinutes().toString(),16);
+  calendarWord[13]=parseInt(d.getSeconds().toString(),16);
+  console.log(d);
+
+  console.log('Resultat');
+  console.log(calendarWord);
+  try{
+    await characteristicCalendar.writeValue(calendarWord);
+  }
+  catch(error){
+    console.log('Argh! ' + error);
   }
 }
