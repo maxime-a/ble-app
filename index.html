@@ -20,14 +20,14 @@
     <div class="row">
       <div class="col-1">
 
-        <div style="margin-top:25px;">
+        <div style="margin-top:10px;margin-bottom: 10px;">
           <button onClick='readStatus()' class="button-34">read Status</button>
         </div>
 
-        <div style="margin-top:25px;">
-          <div class="switch-text">
-            mode auto
-          </div>
+        <div class="switch-text">
+          mode auto
+        </div>
+        <div style="margin-top:10px;margin-bottom: 10px;">
           <label class="switch">
             <input type="checkbox" id="modeSwitch" onchange="modeChange()">
             <div class="slider round">
@@ -35,25 +35,30 @@
           </label>
         </div>
 
-        <div style="margin-top:25px;">
+        <div style="margin-top:10px;margin-bottom: 10px;">
           <button onClick='readActuators()' class="button-34">read Actuators</button>
         </div>
 
-        <div style="margin-top:25px;">
-          <div class="switch-text">
-            fan co2 light
-          </div>
+        <div style="margin-top:10px;margin-bottom: 10px;">
+          <div class="switch-text" style="margin-right:35px;margin-left: 35px;">fan</div>
+          <div class="switch-text" style="margin-right:30px;margin-left: 30px;">co2</div>
+          <div class="switch-text" style="margin-left:30px;">light</div>
+        </div>
+
+        <div style="margin-top:10px;margin-bottom: 10px;">
+          
           <label class="switch">
             <input type="checkbox" id="fanSwitch" onchange="fanChange()">
             <div class="slider round">
             </div>
           </label>
-          
+
           <label class="switch">
             <input type="checkbox" id="co2Switch" onchange="co2Change()">
             <div class="slider round">
             </div>
           </label>
+
           <label class="switch">
             <input type="checkbox" id="lightSwitch" onchange="lightChange()">
             <div class="slider round">

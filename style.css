@@ -9,7 +9,8 @@
   
 .switch-text
 {
-  margin-bottom: 10px;
+  margin-bottom: 0px;
+  display: inline-block;
 }
 .switch input {display:none;}
 
@@ -108,7 +109,7 @@ html
 {
   width: 100%;
   background: rgb(190, 190, 190);
-  box-shadow: #5E5DF0 0 10px 20px -10px;
+  box-shadow: grey 0 10px 20px -10px;
   border-radius: 10px;
   align-items: center;
   min-height: 35px;
@@ -118,7 +119,6 @@ html
 
 .title-bar
 {
-  margin: 25px;
   text-align:center;
 }
 
@@ -135,6 +135,10 @@ html
   flex-basis: 40%;
   position: relative;
   margin-left: 50px;
+  padding: 10px;
+  background-color: rgb(206, 201, 201);
+  border-radius: 10px;
+  box-shadow: grey  0 10px 20px -10px;
 }
 
 .col-2
