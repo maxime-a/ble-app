@@ -27,7 +27,13 @@ function drawChart() {
   var options = {
     title: 'Temperature',
     hAxis: {title: 'Time'},
-    vAxis: {title: 'Temperature in degrees celsius'},
+    vAxis: {
+      title: 'Temperature in degrees celsius',
+      viewWindow:{
+        max:35,
+        min:10
+      }
+    },
     legend: 'none'
   };
   // Draw
