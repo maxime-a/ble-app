@@ -8,49 +8,71 @@
     <title>Web Bluetooth</title>
   </head>
   <body>
-    <div style="margin-top:25px;">
-      <button onClick='connect()'>connect</button>
-      <button onClick='disconnect()'>disconnect</button>
-    </div>
-    <div style="margin-top:25px;">
-      <label class="switch">
-        <input type="checkbox" id="modeSwitch" onchange="modeChange()">
-        <div class="slider round">
-        </div>
-       </label>
-    </div>
-    <div style="margin-top:25px;">
-      <button onClick='readStatus()'>read Status</button>
-      <button onClick='readActuators()'>read Actuators</button>
-    </div>
-    <div style="margin-top:25px;">
-      <label class="switch">
-        <input type="checkbox" id="fanSwitch" onchange="fanChange()">
-        <div class="slider round">
-        </div>
-       </label>
-       <label class="switch">
-        <input type="checkbox" id="co2Switch" onchange="co2Change()">
-        <div class="slider round">
-        </div>
-       </label>
-       <label class="switch">
-        <input type="checkbox" id="lightSwitch" onchange="lightChange()">
-        <div class="slider round">
-        </div>
-       </label>
-    </div>
-    <div>
-      <h4>Service : Control</h4>
-      Status : <label id="status">0x??</label><br>
-      Actuators : <label id="actuators">0x??</label><br>
-      ActuatorsNotif : <label id="actuatorsNotify">0x??</label><br>
-      <h4>Service : Measurements</h4>
-      MeasurementsNotif : <label id="measurementsNotify">0x????????????????????????????????????</label>
-    </div>
-    <div style="margin-top:25px;"><label id="temperature">??°C</label></div>
-    
-    <div id="myChart" style="max-width:700px; height:400px"></div>
 
+    <div class="bar">
+      <div class="title-bar"><h1>Bluetooth test platform</h1></div>
+      <div class="connection-management">
+        <button onClick='connect()' class="button-34">connect</button>
+        <button onClick='disconnect()' class="button-34">disconnect</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-1">
+
+        <div style="margin-top:25px;">
+          <button onClick='readStatus()' class="button-34">read Status</button>
+        </div>
+
+        <div style="margin-top:25px;">
+          <div class="switch-text">
+            mode auto
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="modeSwitch" onchange="modeChange()">
+            <div class="slider round">
+            </div>
+          </label>
+        </div>
+
+        <div style="margin-top:25px;">
+          <button onClick='readActuators()' class="button-34">read Actuators</button>
+        </div>
+
+        <div style="margin-top:25px;">
+          <div class="switch-text">
+            fan co2 light
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="fanSwitch" onchange="fanChange()">
+            <div class="slider round">
+            </div>
+          </label>
+          
+          <label class="switch">
+            <input type="checkbox" id="co2Switch" onchange="co2Change()">
+            <div class="slider round">
+            </div>
+          </label>
+          <label class="switch">
+            <input type="checkbox" id="lightSwitch" onchange="lightChange()">
+            <div class="slider round">
+            </div>
+          </label>
+        </div>
+
+        <div>
+          <h4>Service : Control (0100)</h4>
+          Status : <label id="status">0x??</label><br>
+          Actuators : <label id="actuators">0x??</label><br>
+          ActuatorsNotif : <label id="actuatorsNotify">0x??</label><br>
+          <h4>Service : Measurements (0300)</h4>
+          MeasurementsNotif : <label id="measurementsNotify">0x????????????????????????????????????</label>
+        </div>
+      </div>
+      <div class="col-2">
+        <div id="myChart" class="temp-chart" style="max-width:700px; height:400px"></div>
+      </div>
+    </div>
   </body>
 </html>
