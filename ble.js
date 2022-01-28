@@ -117,7 +117,6 @@ function handleDataMeasurements(event) {
   // get the data buffer from the meter:
   var buf = new Uint8Array(event.target.value.buffer);
   document.getElementById('measurementsNotify').innerHTML = "0x"+buf.toString();
-  document.getElementById('temperature').innerHTML = ((buf[17]*255+buf[18])/10).toString() + "°C";
   tempTable.addRow([new Date(), ((buf[17]*255+buf[18])/10)]);
   drawChart();
 }
