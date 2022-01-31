@@ -13,6 +13,7 @@ var myCharacteristic3 = 0x0204;
 var characteristicStatus;
 var characteristicActuators;
 var characteristicCalendar;
+var characteristicPosition;
 
 var tempTable;
 
@@ -34,6 +35,7 @@ function drawChart() {
         min:10
       }
     },
+    curveType: 'function',
     legend: 'none'
   };
   // Draw
@@ -51,6 +53,7 @@ async function connect() {
      // filters: [...] <- Prefer filters to save energy & show relevant devices.
         acceptAllDevices: true,
         services: servicesNeeded,
+        name : 'EcoTrap',
         optionalServices : servicesNeeded});
     myDevice.addEventListener('gattserverdisconnected', disconnect);
     console.log('Connecting to GATT Server...');
@@ -85,6 +88,10 @@ async function connect() {
         if(characteristic.uuid === "00000204-0000-1000-8000-00805f9b34fb")
         {
           characteristicCalendar=characteristic;
+        }
+        if(characteristic.uuid === "00000205-0000-1000-8000-00805f9b34fb")
+        {
+          characteristicPosition=characteristic;
         }
         if(characteristic.uuid === "00000301-0000-1000-8000-00805f9b34fb")
         {
@@ -159,6 +166,10 @@ async function pageInit() {
   {
     document.getElementById('lightSwitch').checked = false;
   }
+
+  let positionWord = new Uint8Array(8);
+  positionWord = await readPosition();
+
 }
 
 // subscribe to changes from the meter:
@@ -227,6 +238,36 @@ async function readActuators(){
   console.log(statusWord[0]);
   console.log(statusWord[1]);
   document.getElementById('actuators').innerHTML = "0x"+statusWord.toString();
+  return statusWord;
+}
+
+async function readPosition(){
+  var value = await characteristicPosition.readValue();
+  const statusWord = new Uint8Array(value.buffer);
+  console.log(statusWord);
+  console.log(statusWord[0]);
+  console.log(statusWord[1]);
+
+  // Create a buffer
+  var buf = new ArrayBuffer(8);
+  // Create a data view of it
+  var view = new DataView(buf);
+
+  // set bytes
+  statusWord.forEach(function (b, i) {
+      view.setUint8(i, b);
+  });
+
+  // Read the bits as a float; note that by doing this, we're implicitly
+  // converting it from a 32-bit float into JavaScript's native 64-bit double
+  var latitude = view.getFloat32(0,true); //true little endian
+  var longitude = view.getFloat32(4,true);
+  // Done
+  console.log(latitude);
+  console.log(longitude);
+
+  updateMapPosition(latitude,longitude);
+  
   return statusWord;
 }
 
@@ -364,6 +405,11 @@ async function setTime() {
   calendarWord[11]=parseInt(d.getHours().toString(),16); //parseInt to convert d.getHours to bcd
   calendarWord[12]=parseInt(d.getMinutes().toString(),16);
   calendarWord[13]=parseInt(d.getSeconds().toString(),16);
+
+  calendarWord[7]=parseInt((d.getFullYear()-2000).toString(),16); // -2000 because rtc only take tens 
+  calendarWord[8]=parseInt((d.getMonth()+1).toString(),16); // +1 because date return 0 to 11 and rtc take 1 to 12 
+  calendarWord[9]=parseInt(d.getDate().toString(),16);
+  calendarWord[10]=convDayofWeek(d.getDay());
   console.log(d);
 
   console.log('Resultat');
@@ -374,4 +420,76 @@ async function setTime() {
   catch(error){
     console.log('Argh! ' + error);
   }
+}
+
+function convDayofWeek(dayNum)
+{
+  var dayBit;
+
+  switch(dayNum)
+  {
+    case 0:
+      dayBit = 64;
+      break;
+    case 1:
+      dayBit = 1;
+      break;
+    case 2:
+      dayBit = 2;
+      break;
+    case 3:
+      dayBit = 4;
+      break;
+    case 4:
+      dayBit = 8;
+      break;
+    case 5:
+      dayBit = 16;
+      break;
+    case 6:
+      dayBit = 32;
+      break;
+    default:
+      dayBit = 1;
+      break;
+  }
+
+  return dayBit
+}
+
+function geoFindMe() {
+
+  function success(position) {
+    const latitude  = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    console.log(latitude);
+    console.log(longitude);
+
+    var data = new Float32Array([latitude,longitude]);
+    var buffer = new ArrayBuffer(data.byteLength);
+    var floatView = new Float32Array(buffer).set(data);
+    var byteView = new Uint8Array(buffer); //in little endian DCBA
+    console.log(byteView);
+    characteristicPosition.writeValue(byteView);
+    updateMapPosition(latitude,longitude);
+  }
+
+  function error() {
+    status.textContent = 'Unable to retrieve your location';
+  }
+
+  if (!navigator.geolocation) {
+    status.textContent = 'Geolocation is not supported by your browser';
+  } else {
+    status.textContent = 'Locating…';
+    navigator.geolocation.getCurrentPosition(success, error);
+  }
+
+}
+
+function updateMapPosition(latitude,longitude)
+{
+  const map = document.querySelector('#gmap_canvas');
+  map.src = 'https://maps.google.com/maps?q='+latitude+','+longitude+'&maptype=satellite&z=15&output=embed'; 
 }
