@@ -100,7 +100,8 @@ async function connect() {
         }
       });
     }
-    pageInit();
+    
+    setTimeout(pageInit, 500); //Don't call immediatly that cause unknown GATT error on mobile
 
   } catch(error) {
     console.log('Argh! ' + error);
