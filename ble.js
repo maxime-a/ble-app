@@ -400,9 +400,19 @@ function disconnect() {
   }
 }
 
-async function setTime() {
+async function setTimes() {
   const d = new Date();
   let calendarWord = new Uint8Array(35);
+
+  start1_hours = 255;
+  end1_hours = 255;
+  start2_hours = 255;
+  end2_hours = 255;
+  start1_minutes = 255;
+  end1_minutes = 255;
+  start2_minutes = 255;
+  end2_minutes = 255;
+
   calendarWord[11]=parseInt(d.getHours().toString(),16); //parseInt to convert d.getHours to bcd
   calendarWord[12]=parseInt(d.getMinutes().toString(),16);
   calendarWord[13]=parseInt(d.getSeconds().toString(),16);
@@ -413,6 +423,40 @@ async function setTime() {
   calendarWord[10]=convDayofWeek(d.getDay());
   console.log(d);
 
+  var start1 = document.getElementById('start1').value;
+
+  if(start1.value!==undefined)
+  {
+    start1_hours = parseInt(start1.substring(0,2),16);
+    start1_minutes = parseInt(start1.substring(3),16);
+
+    var end1 = document.getElementById('end1').value;
+    end1_hours = parseInt(end1.substring(0,2),16);
+    end1_minutes = parseInt(end1.substring(3),16);
+  }
+
+  var start2 = document.getElementById('start2').value;
+  if(start2.value!==undefined)
+  {
+    start2_hours = parseInt(start2.substring(0,2),16);
+    start2_minutes = parseInt(start2.substring(3),16);
+
+    var end2 = document.getElementById('end2').value;
+    end2_hours = parseInt(end2.substring(0,2),16);
+    end2_minutes = parseInt(end2.substring(3),16);
+  }
+
+  calendarWord[32] = start2_hours;
+  calendarWord[33] = start2_minutes;
+  calendarWord[39] = end2_hours;
+  calendarWord[10] = end2_minutes;
+
+  calendarWord[18] = start1_hours;
+  calendarWord[19] = start1_minutes;
+  calendarWord[25] = end1_hours;
+  calendarWord[26] = end1_minutes;
+
+  
   console.log('Resultat');
   console.log(calendarWord);
   try{
@@ -421,6 +465,7 @@ async function setTime() {
   catch(error){
     console.log('Argh! ' + error);
   }
+  
 }
 
 function convDayofWeek(dayNum)
