@@ -425,7 +425,8 @@ async function setTimes() {
 
   var start1 = document.getElementById('start1').value;
 
-  if(start1.value!==undefined)
+  console.log(start1)
+  if(start1!==undefined)
   {
     start1_hours = parseInt(start1.substring(0,2),16);
     start1_minutes = parseInt(start1.substring(3),16);
@@ -436,7 +437,8 @@ async function setTimes() {
   }
 
   var start2 = document.getElementById('start2').value;
-  if(start2.value!==undefined)
+
+  if(start2!==undefined)
   {
     start2_hours = parseInt(start2.substring(0,2),16);
     start2_minutes = parseInt(start2.substring(3),16);
