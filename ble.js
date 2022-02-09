@@ -416,6 +416,7 @@ async function setTimes() {
   end1_seconds = 255;
   start2_seconds = 255;
   end2_seconds = 255;
+  start1_days = 0;
 
   // Set current time
   const d = new Date();
@@ -443,6 +444,35 @@ async function setTimes() {
     end1_hours = parseInt(end1.substring(0,2),16);
     end1_minutes = parseInt(end1.substring(3,5),16);
     end1_seconds = parseInt(end1.substring(6),16);
+
+    if(document.getElementById('mon1').checked)
+    {
+      start1_days+=1;
+    }
+    if(document.getElementById('tue1').checked)
+    {
+      start1_days+=2;
+    }
+    if(document.getElementById('wed1').checked)
+    {
+      start1_days+=4;
+    }
+    if(document.getElementById('thu1').checked)
+    {
+      start1_days+=8;
+    }
+    if(document.getElementById('fri1').checked)
+    {
+      start1_days+=16;
+    }
+    if(document.getElementById('sat1').checked)
+    {
+      start1_days+=32;
+    }
+    if(document.getElementById('sun1').checked)
+    {
+      start1_days+=64;
+    }
   }
 
   // Alarm 2
@@ -459,6 +489,7 @@ async function setTimes() {
     end2_hours = parseInt(end2.substring(0,2),16);
     end2_minutes = parseInt(end2.substring(3,5),16);
     end2_seconds = parseInt(end2.substring(6),16);
+
   }
 
   calendarWord[32] = start2_hours;
@@ -469,6 +500,7 @@ async function setTimes() {
   calendarWord[40] = end2_minutes;
   calendarWord[41] = end2_seconds;
 
+  calendarWord[17] = start1_days;
   calendarWord[18] = start1_hours;
   calendarWord[19] = start1_minutes;
   calendarWord[20] = start1_seconds;
