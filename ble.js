@@ -129,6 +129,7 @@ function HTMLinit()
 {
   document.getElementById("alarm1div").checked=false;
   document.getElementById("alarm2div").checked=false;
+  
   // This will disable all the children of the div
   var nodes = document.getElementById("alarm1div").getElementsByTagName('*');
   for(var i = 0; i < nodes.length; i++){
