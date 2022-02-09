@@ -127,6 +127,8 @@ function onPageLoad()
 
 function HTMLinit()
 {
+  document.getElementById("alarm1div").checked=false;
+  document.getElementById("alarm2div").checked=false;
   // This will disable all the children of the div
   var nodes = document.getElementById("alarm1div").getElementsByTagName('*');
   for(var i = 0; i < nodes.length; i++){
@@ -555,7 +557,7 @@ async function setTimes() {
   var start2 = document.getElementById('start2').value;
 
   console.log(start2);
-  if(document.getElementById('setAlarm1').checked)
+  if(document.getElementById('setAlarm2').checked)
   {
     if(start2!=='')
     {
@@ -607,7 +609,7 @@ async function setTimes() {
       end2_seconds = 255;
     }
   }
-  
+
   calendarWord[31] = start1_days;
   calendarWord[32] = start2_hours;
   calendarWord[33] = start2_minutes;
