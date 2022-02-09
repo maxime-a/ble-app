@@ -5,6 +5,7 @@
   box-shadow: #5E5DF0 0 10px 20px -10px;
   width: 90px;
   height: 34px;
+  border-radius: 34px;
 }
   
 .switch-text
@@ -24,7 +25,7 @@
   background-color: #ca2222;
   -webkit-transition: .4s;
   transition: .4s;
-      border-radius: 34px;
+  border-radius: 34px;
 }
 
 .slider:before {
@@ -41,7 +42,7 @@
 }
 
 input:checked + .slider {
-background-color: #2ab934;
+  background-color: #2ab934;
 }
 
 input:focus + .slider {

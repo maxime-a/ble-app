@@ -7,7 +7,7 @@
     <script type="text/javascript" src="ble.js"></script>
     <title>Web Bluetooth</title>
   </head>
-  <body>
+  <body onload="onPageLoad()">
 
     <div class="bar">
       <div class="title-bar"><h1>Bluetooth test platform</h1></div>
@@ -85,41 +85,69 @@
         <div style="margin-top:10px;margin-bottom: 10px;">
           <button onClick='setTimes()' class="button-34">set times</button>
         </div>
-        <div style="margin-top:10px;margin-bottom: 10px;">
-          <label for="start">Start time 1:</label>
-          <input type="time" id="start1" step="1">
+        <div><input type="checkbox" id="setAlarm1" onclick="setAlarm1()">Change alarm 1</input></div>
+        <div id="alarm1div">
+          <div style="margin-top:10px;margin-bottom: 10px;">
+            <label for="start">Start time 1:</label>
+            <input type="time" id="start1" step="1">
 
-          <label for="end">End time 1:</label>
-          <input type="time" id="end1" step="1">
+            <label for="end">End time 1:</label>
+            <input type="time" id="end1" step="1">
+          </div>
+          <div>
+            <table>
+              <tr>
+                <td>Mon</td>
+                <td>Tue</td>
+                <td>Wed</td>
+                <td>Thu</td>
+                <td>Fri</td>
+                <td>Sat</td>
+                <td>Sun</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" id="mon1"></td>
+                <td><input type="checkbox" id="tue1"></td>
+                <td><input type="checkbox" id="wed1"></td>
+                <td><input type="checkbox" id="thu1"></td>
+                <td><input type="checkbox" id="fri1"></td>
+                <td><input type="checkbox" id="sat1"></td>
+                <td><input type="checkbox" id="sun1"></td>
+              </tr>
+            </table>  
+          </div>        
         </div>
-        <div>
-          <table>
-            <tr>
-              <td>Mon</td>
-              <td>Tue</td>
-              <td>Wed</td>
-              <td>Thu</td>
-              <td>Fri</td>
-              <td>Sat</td>
-              <td>Sun</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" id="mon1"></td>
-              <td><input type="checkbox" id="tue1"></td>
-              <td><input type="checkbox" id="wed1"></td>
-              <td><input type="checkbox" id="thu1"></td>
-              <td><input type="checkbox" id="fri1"></td>
-              <td><input type="checkbox" id="sat1"></td>
-              <td><input type="checkbox" id="sun1"></td>
-            </tr>
-          </table>          
-        </div>
-        <div style="margin-top:10px;margin-bottom: 10px;">
-          <label for="start">Start time 2:</label>
-          <input type="time" id="start2" step="1">
+        <div><input type="checkbox" id="setAlarm2" onclick="setAlarm2()">Change alarm 2</input></div>
+        <div id="alarm2div">
+          <div style="margin-top:10px;margin-bottom: 10px;">
+            <label for="start">Start time 2:</label>
+            <input type="time" id="start2" step="1">
 
-          <label for="end">End time 2:</label>
-          <input type="time" id="end2" step="1">
+            <label for="end">End time 2:</label>
+            <input type="time" id="end2" step="1">
+          </div>
+          <div>
+            <table>
+              <tr>
+                <td>Mon</td>
+                <td>Tue</td>
+                <td>Wed</td>
+                <td>Thu</td>
+                <td>Fri</td>
+                <td>Sat</td>
+                <td>Sun</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" id="mon1"></td>
+                <td><input type="checkbox" id="tue1"></td>
+                <td><input type="checkbox" id="wed1"></td>
+                <td><input type="checkbox" id="thu1"></td>
+                <td><input type="checkbox" id="fri1"></td>
+                <td><input type="checkbox" id="sat1"></td>
+                <td><input type="checkbox" id="sun1"></td>
+              </tr>
+            </table>          
+          </div>
         </div>
       </div>
       <div class="col-2">

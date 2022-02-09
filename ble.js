@@ -120,8 +120,31 @@ function getSupportedProperties(characteristic) {
   return '[' + supportedProperties.join(', ') + ']';
 }
 
+function onPageLoad()
+{
+  HTMLinit();
+}
+
+function HTMLinit()
+{
+  // This will disable all the children of the div
+  var nodes = document.getElementById("alarm1div").getElementsByTagName('*');
+  for(var i = 0; i < nodes.length; i++){
+      nodes[i].disabled = true;
+  }
+
+  // This will disable all the children of the div
+  var nodes = document.getElementById("alarm2div").getElementsByTagName('*');
+  for(var i = 0; i < nodes.length; i++){
+      nodes[i].disabled = true;
+  }
+}
+
 // Called at the end of connection to read the characteristics and update the switches states accordingly
 async function pageInit() {
+
+  HTMLinit();
+
   let statusWord = new Uint8Array(2);
   
   statusWord = await readStatus();
@@ -400,23 +423,65 @@ function disconnect() {
   }
 }
 
+function setAlarm1()
+{
+  if(document.getElementById("setAlarm1").checked)
+  {
+    // This will enable all the children of the div
+    var nodes = document.getElementById("alarm1div").getElementsByTagName('*');
+    for(var i = 0; i < nodes.length; i++){
+        nodes[i].disabled = false;
+    }
+  }
+  else
+  {
+    // This will disable all the children of the div
+    var nodes = document.getElementById("alarm1div").getElementsByTagName('*');
+    for(var i = 0; i < nodes.length; i++){
+        nodes[i].disabled = true;
+    }
+  }
+
+}
+
+function setAlarm2()
+{
+  if(document.getElementById("setAlarm2").checked)
+  {
+    // This will enable all the children of the div
+    var nodes = document.getElementById("alarm2div").getElementsByTagName('*');
+    for(var i = 0; i < nodes.length; i++){
+        nodes[i].disabled = false;
+    }
+  }
+  else
+  {
+    // This will disable all the children of the div
+    var nodes = document.getElementById("alarm2div").getElementsByTagName('*');
+    for(var i = 0; i < nodes.length; i++){
+        nodes[i].disabled = true;
+    }
+  }
+}
+
 async function setTimes() {
   
   let calendarWord = new Uint8Array(35);
 
-  start1_hours = 255;
-  end1_hours = 255;
-  start2_hours = 255;
-  end2_hours = 255;
-  start1_minutes = 255;
-  end1_minutes = 255;
-  start2_minutes = 255;
-  end2_minutes = 255;
-  start1_seconds = 255;
-  end1_seconds = 255;
-  start2_seconds = 255;
-  end2_seconds = 255;
+  start1_hours = 0;
+  end1_hours = 0;
+  start2_hours = 0;
+  end2_hours = 0;
+  start1_minutes = 0;
+  end1_minutes = 0;
+  start2_minutes = 0;
+  end2_minutes = 0;
+  start1_seconds = 0;
+  end1_seconds = 0;
+  start2_seconds = 0;
+  end2_seconds = 0;
   start1_days = 0;
+  start2_days = 0;
 
   // Set current time
   const d = new Date();
@@ -474,6 +539,15 @@ async function setTimes() {
       start1_days+=64;
     }
   }
+  else
+  {
+    start1_hours = 255;
+    end1_hours = 255;
+    start1_minutes = 255;
+    end1_minutes = 255;
+    start1_seconds = 255;
+    end1_seconds = 255;
+  }
 
   // Alarm 2
   var start2 = document.getElementById('start2').value;
@@ -490,8 +564,46 @@ async function setTimes() {
     end2_minutes = parseInt(end2.substring(3,5),16);
     end2_seconds = parseInt(end2.substring(6),16);
 
+    if(document.getElementById('mon2').checked)
+    {
+      start2_days+=1;
+    }
+    if(document.getElementById('tue2').checked)
+    {
+      start2_days+=2;
+    }
+    if(document.getElementById('wed2').checked)
+    {
+      start2_days+=4;
+    }
+    if(document.getElementById('thu2').checked)
+    {
+      start2_days+=8;
+    }
+    if(document.getElementById('fri2').checked)
+    {
+      start2_days+=16;
+    }
+    if(document.getElementById('sat2').checked)
+    {
+      start2_days+=32;
+    }
+    if(document.getElementById('sun2').checked)
+    {
+      start2_days+=64;
+    }
+  }
+  else
+  {
+    start2_hours = 255;
+    end2_hours = 255;
+    start2_minutes = 255;
+    end2_minutes = 255;
+    start2_seconds = 255;
+    end2_seconds = 255;
   }
 
+  calendarWord[31] = start1_days;
   calendarWord[32] = start2_hours;
   calendarWord[33] = start2_minutes;
   calendarWord[34] = start2_seconds;
