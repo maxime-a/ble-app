@@ -401,7 +401,7 @@ function disconnect() {
 }
 
 async function setTimes() {
-  const d = new Date();
+  
   let calendarWord = new Uint8Array(35);
 
   start1_hours = 255;
@@ -412,7 +412,13 @@ async function setTimes() {
   end1_minutes = 255;
   start2_minutes = 255;
   end2_minutes = 255;
+  start1_seconds = 255;
+  end1_seconds = 255;
+  start2_seconds = 255;
+  end2_seconds = 255;
 
+  // Set current time
+  const d = new Date();
   calendarWord[11]=parseInt(d.getHours().toString(),16); //parseInt to convert d.getHours to bcd
   calendarWord[12]=parseInt(d.getMinutes().toString(),16);
   calendarWord[13]=parseInt(d.getSeconds().toString(),16);
@@ -423,40 +429,53 @@ async function setTimes() {
   calendarWord[10]=convDayofWeek(d.getDay());
   console.log(d);
 
+  // Alarm 1
   var start1 = document.getElementById('start1').value;
 
-  console.log(start1)
-  if(start1!==undefined)
+  console.log(start1);
+  if(start1!=='')
   {
     start1_hours = parseInt(start1.substring(0,2),16);
-    start1_minutes = parseInt(start1.substring(3),16);
+    start1_minutes = parseInt(start1.substring(3,5),16);
+    start1_seconds = parseInt(start1.substring(6),16);
 
     var end1 = document.getElementById('end1').value;
     end1_hours = parseInt(end1.substring(0,2),16);
-    end1_minutes = parseInt(end1.substring(3),16);
+    end1_minutes = parseInt(end1.substring(3,5),16);
+    end1_seconds = parseInt(end1.substring(6),16);
   }
 
+  // Alarm 2
   var start2 = document.getElementById('start2').value;
 
-  if(start2!==undefined)
+  console.log(start2);
+  if(start2!=='')
   {
     start2_hours = parseInt(start2.substring(0,2),16);
-    start2_minutes = parseInt(start2.substring(3),16);
+    start2_minutes = parseInt(start2.substring(3,5),16);
+    start2_seconds = parseInt(start2.substring(6),16);
 
     var end2 = document.getElementById('end2').value;
     end2_hours = parseInt(end2.substring(0,2),16);
-    end2_minutes = parseInt(end2.substring(3),16);
+    end2_minutes = parseInt(end2.substring(3,5),16);
+    end2_seconds = parseInt(end2.substring(6),16);
   }
 
   calendarWord[32] = start2_hours;
   calendarWord[33] = start2_minutes;
+  calendarWord[34] = start2_seconds;
+
   calendarWord[39] = end2_hours;
-  calendarWord[10] = end2_minutes;
+  calendarWord[40] = end2_minutes;
+  calendarWord[41] = end2_seconds;
 
   calendarWord[18] = start1_hours;
   calendarWord[19] = start1_minutes;
+  calendarWord[20] = start1_seconds;
+
   calendarWord[25] = end1_hours;
   calendarWord[26] = end1_minutes;
+  calendarWord[27] = end1_seconds;
 
   
   console.log('Resultat');
