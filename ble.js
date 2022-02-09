@@ -499,110 +499,115 @@ async function setTimes() {
   var start1 = document.getElementById('start1').value;
 
   console.log(start1);
-  if(start1!=='')
+  if(document.getElementById('setAlarm1').checked)
   {
-    start1_hours = parseInt(start1.substring(0,2),16);
-    start1_minutes = parseInt(start1.substring(3,5),16);
-    start1_seconds = parseInt(start1.substring(6),16);
+    if(start1!=='')
+    {
+      start1_hours = parseInt(start1.substring(0,2),16);
+      start1_minutes = parseInt(start1.substring(3,5),16);
+      start1_seconds = parseInt(start1.substring(6),16);
 
-    var end1 = document.getElementById('end1').value;
-    end1_hours = parseInt(end1.substring(0,2),16);
-    end1_minutes = parseInt(end1.substring(3,5),16);
-    end1_seconds = parseInt(end1.substring(6),16);
+      var end1 = document.getElementById('end1').value;
+      end1_hours = parseInt(end1.substring(0,2),16);
+      end1_minutes = parseInt(end1.substring(3,5),16);
+      end1_seconds = parseInt(end1.substring(6),16);
 
-    if(document.getElementById('mon1').checked)
-    {
-      start1_days+=1;
+      if(document.getElementById('mon1').checked)
+      {
+        start1_days+=1;
+      }
+      if(document.getElementById('tue1').checked)
+      {
+        start1_days+=2;
+      }
+      if(document.getElementById('wed1').checked)
+      {
+        start1_days+=4;
+      }
+      if(document.getElementById('thu1').checked)
+      {
+        start1_days+=8;
+      }
+      if(document.getElementById('fri1').checked)
+      {
+        start1_days+=16;
+      }
+      if(document.getElementById('sat1').checked)
+      {
+        start1_days+=32;
+      }
+      if(document.getElementById('sun1').checked)
+      {
+        start1_days+=64;
+      }
     }
-    if(document.getElementById('tue1').checked)
+    else
     {
-      start1_days+=2;
-    }
-    if(document.getElementById('wed1').checked)
-    {
-      start1_days+=4;
-    }
-    if(document.getElementById('thu1').checked)
-    {
-      start1_days+=8;
-    }
-    if(document.getElementById('fri1').checked)
-    {
-      start1_days+=16;
-    }
-    if(document.getElementById('sat1').checked)
-    {
-      start1_days+=32;
-    }
-    if(document.getElementById('sun1').checked)
-    {
-      start1_days+=64;
+      start1_hours = 255;
+      end1_hours = 255;
+      start1_minutes = 255;
+      end1_minutes = 255;
+      start1_seconds = 255;
+      end1_seconds = 255;
     }
   }
-  else
-  {
-    start1_hours = 255;
-    end1_hours = 255;
-    start1_minutes = 255;
-    end1_minutes = 255;
-    start1_seconds = 255;
-    end1_seconds = 255;
-  }
-
   // Alarm 2
   var start2 = document.getElementById('start2').value;
 
   console.log(start2);
-  if(start2!=='')
+  if(document.getElementById('setAlarm1').checked)
   {
-    start2_hours = parseInt(start2.substring(0,2),16);
-    start2_minutes = parseInt(start2.substring(3,5),16);
-    start2_seconds = parseInt(start2.substring(6),16);
+    if(start2!=='')
+    {
+      start2_hours = parseInt(start2.substring(0,2),16);
+      start2_minutes = parseInt(start2.substring(3,5),16);
+      start2_seconds = parseInt(start2.substring(6),16);
 
-    var end2 = document.getElementById('end2').value;
-    end2_hours = parseInt(end2.substring(0,2),16);
-    end2_minutes = parseInt(end2.substring(3,5),16);
-    end2_seconds = parseInt(end2.substring(6),16);
+      var end2 = document.getElementById('end2').value;
+      end2_hours = parseInt(end2.substring(0,2),16);
+      end2_minutes = parseInt(end2.substring(3,5),16);
+      end2_seconds = parseInt(end2.substring(6),16);
 
-    if(document.getElementById('mon2').checked)
-    {
-      start2_days+=1;
+      if(document.getElementById('mon2').checked)
+      {
+        start2_days+=1;
+      }
+      if(document.getElementById('tue2').checked)
+      {
+        start2_days+=2;
+      }
+      if(document.getElementById('wed2').checked)
+      {
+        start2_days+=4;
+      }
+      if(document.getElementById('thu2').checked)
+      {
+        start2_days+=8;
+      }
+      if(document.getElementById('fri2').checked)
+      {
+        start2_days+=16;
+      }
+      if(document.getElementById('sat2').checked)
+      {
+        start2_days+=32;
+      }
+      if(document.getElementById('sun2').checked)
+      {
+        start2_days+=64;
+      }
     }
-    if(document.getElementById('tue2').checked)
+    else
     {
-      start2_days+=2;
-    }
-    if(document.getElementById('wed2').checked)
-    {
-      start2_days+=4;
-    }
-    if(document.getElementById('thu2').checked)
-    {
-      start2_days+=8;
-    }
-    if(document.getElementById('fri2').checked)
-    {
-      start2_days+=16;
-    }
-    if(document.getElementById('sat2').checked)
-    {
-      start2_days+=32;
-    }
-    if(document.getElementById('sun2').checked)
-    {
-      start2_days+=64;
+      start2_hours = 255;
+      end2_hours = 255;
+      start2_minutes = 255;
+      end2_minutes = 255;
+      start2_seconds = 255;
+      end2_seconds = 255;
     }
   }
-  else
-  {
-    start2_hours = 255;
-    end2_hours = 255;
-    start2_minutes = 255;
-    end2_minutes = 255;
-    start2_seconds = 255;
-    end2_seconds = 255;
-  }
-
+  
   calendarWord[31] = start1_days;
   calendarWord[32] = start2_hours;
   calendarWord[33] = start2_minutes;
