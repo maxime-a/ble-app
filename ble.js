@@ -610,7 +610,7 @@ async function setTimes() {
     }
   }
 
-  calendarWord[31] = start1_days;
+  calendarWord[31] = start2_days;
   calendarWord[32] = start2_hours;
   calendarWord[33] = start2_minutes;
   calendarWord[34] = start2_seconds;
