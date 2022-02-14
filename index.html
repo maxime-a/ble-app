@@ -83,6 +83,28 @@
     <div class="row">
       <div class="col-1">
         <div style="margin-top:10px;margin-bottom: 10px;">
+          <button onClick='writeTemps()' class="button-34">Set config</button>
+        </div>
+        <div style="margin-top:10px;margin-bottom: 10px;">
+          <label id="minTempLbl">Temperature : min 20°C</label>
+          <input type="range" id="minTemp"
+          min="0" max="50" value ="20" step="0.5" onchange="tempMinChange(this.value);"></input>
+
+          <input type="range" id="maxTemp"
+          min="0" max="50" value ="25" step="0.5" onchange="tempMaxChange(this.value);"></input>
+          <label id="maxTempLbl">max 25°C</label>
+        </div>
+        <div style="margin-top:10px;margin-bottom: 10px;">
+          
+        </div>
+      </div>
+      <div class="col-2">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-1">
+        <div style="margin-top:10px;margin-bottom: 10px;">
           <button onClick='setTimes()' class="button-34">set times</button>
         </div>
         <div><input type="checkbox" id="setAlarm1" onclick="setAlarm1()">Change alarm 1</input></div>

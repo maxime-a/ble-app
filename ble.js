@@ -14,6 +14,7 @@ var characteristicStatus;
 var characteristicActuators;
 var characteristicCalendar;
 var characteristicPosition;
+var characteristicSensors;
 
 var tempTable;
 
@@ -84,6 +85,10 @@ async function connect() {
         {
           characteristic.startNotifications();
           subscribeToChangesActuators(characteristic);
+        }
+        if(characteristic.uuid === "00000202-0000-1000-8000-00805f9b34fb")
+        {
+          characteristicSensors=characteristic;
         }
         if(characteristic.uuid === "00000204-0000-1000-8000-00805f9b34fb")
         {
@@ -296,6 +301,13 @@ async function readPosition(){
   updateMapPosition(latitude,longitude);
   
   return statusWord;
+}
+
+async function readSensors(){
+  var value = await characteristicSensors.readValue();
+  let sensorsWord = new Uint8Array(value.buffer);
+  console.log(sensorsWord);
+  return sensorsWord;
 }
 
 // switchs handlers
@@ -711,4 +723,44 @@ function updateMapPosition(latitude,longitude)
 {
   const map = document.querySelector('#gmap_canvas');
   map.src = 'https://maps.google.com/maps?q='+latitude+','+longitude+'&maptype=satellite&z=15&output=embed'; 
+}
+
+function tempMinChange(value)
+{
+  document.getElementById("minTempLbl").innerHTML = "Temperature : min " + value + "°C";
+}
+
+function tempMaxChange(value)
+{
+  document.getElementById("maxTempLbl").innerHTML = "max " + value + "°C";
+}
+
+async function writeTemps()
+{
+  let sensorsWord = new Uint8Array(20);
+  
+  tempMin = parseInt(document.getElementById("minTemp").value*10,10);
+  tempMax = parseInt(document.getElementById("maxTemp").value*10,10);
+
+  sensorsWord = await readSensors();
+  console.log('Read');
+  console.log(sensorsWord);
+
+  //Temp max
+  sensorsWord[15] = tempMax/255;
+  sensorsWord[16] = tempMax%255;
+
+  //Temp min
+  sensorsWord[17] = tempMin/255;
+  sensorsWord[18] = tempMin%255;
+
+  
+  console.log('Resultat');
+  console.log(sensorsWord);
+  try{
+    await characteristicSensors.writeValue(sensorsWord);
+  }
+  catch(error){
+    console.log('Argh! ' + error);
+  }
 }
