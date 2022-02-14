@@ -21,18 +21,19 @@ var tempTable;
 google.charts.load('current',{packages:['corechart']}).then(function(){
   tempTable = new google.visualization.DataTable();
   tempTable.addColumn('datetime', 'Time of Day');
-  tempTable.addColumn('number', 'Temperature');});
+  tempTable.addColumn('number', 'Temperature');
+  tempTable.addColumn('number', 'Humidity');});
 //google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
   // Set Options
   var options = {
-    title: 'Temperature',
+    title: 'Temperature & Humidity',
     hAxis: {title: 'Time'},
     vAxis: {
-      title: 'Temperature in degrees celsius',
+      title: 'Temperature in degrees celsius and humidity in %',
       viewWindow:{
-        max:35,
+        max:100,
         min:10
       }
     },
@@ -132,8 +133,8 @@ function onPageLoad()
 
 function HTMLinit()
 {
-  document.getElementById("alarm1div").checked=false;
-  document.getElementById("alarm2div").checked=false;
+  document.getElementById("setAlarm1").checked=false;
+  document.getElementById("setAlarm2").checked=false;
   
   // This will disable all the children of the div
   var nodes = document.getElementById("alarm1div").getElementsByTagName('*');
@@ -248,7 +249,7 @@ function handleDataMeasurements(event) {
   // get the data buffer from the meter:
   var buf = new Uint8Array(event.target.value.buffer);
   document.getElementById('measurementsNotify').innerHTML = "0x"+buf.toString();
-  tempTable.addRow([new Date(), ((buf[17]*255+buf[18])/10)]);
+  tempTable.addRow([new Date(), ((buf[17]*255+buf[18])/10),buf[13]]); //buff[19] for the humidity normally
   drawChart();
 }
 
