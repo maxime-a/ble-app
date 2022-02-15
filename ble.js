@@ -18,6 +18,22 @@ var characteristicSensors;
 
 var tempTable;
 
+let temp_sliderOne = document.getElementById("temp-slider-1");
+let temp_sliderTwo = document.getElementById("temp-slider-2");
+let temp_displayValOne = document.getElementById("temp-range1");
+let temp_displayValTwo = document.getElementById("temp-range2");
+let temp_minGap = 1;
+let temp_sliderTrack = document.getElementById("temp-slider-track");
+let temp_sliderMaxValue = document.getElementById("temp-slider-1").max;
+
+let hum_sliderOne = document.getElementById("hum-slider-1");
+let hum_sliderTwo = document.getElementById("hum-slider-2");
+let hum_displayValOne = document.getElementById("hum-range1");
+let hum_displayValTwo = document.getElementById("hum-range2");
+let hum_minGap = 1;
+let hum_sliderTrack = document.getElementById("hum-slider-track");
+let hum_sliderMaxValue = document.getElementById("hum-slider-1").max;
+
 google.charts.load('current',{packages:['corechart']}).then(function(){
   tempTable = new google.visualization.DataTable();
   tempTable.addColumn('datetime', 'Time of Day');
@@ -133,6 +149,12 @@ function onPageLoad()
 
 function HTMLinit()
 {
+  //Sliders
+  tempSlideOne();
+  tempSlideTwo();
+  humSlideOne();
+  humSlideTwo();
+  
   document.getElementById("setAlarm1").checked=false;
   document.getElementById("setAlarm2").checked=false;
   
@@ -726,44 +748,20 @@ function updateMapPosition(latitude,longitude)
   map.src = 'https://maps.google.com/maps?q='+latitude+','+longitude+'&maptype=satellite&z=15&output=embed'; 
 }
 
-function tempMinChange(value)
-{
-  document.getElementById("minTempLbl").innerHTML = "Temperature : min " + value + "°C";
-}
-
-function tempMaxChange(value)
-{
-  if(value <= document.getElementById("minTemp").value)
-  {
-    document.getElementById("maxTemp").value = parseInt(document.getElementById("minTemp").value,10) + 1;
-  }
-  document.getElementById("maxTempLbl").innerHTML = "max " + document.getElementById("maxTemp").value + "°C";
-}
-
-function humidityMinChange(value)
-{
-  document.getElementById("minHumidityLbl").innerHTML = "Humidity : min " + value + "%";
-}
-
-function humidityMaxChange(value)
-{
-  document.getElementById("maxHumidityLbl").innerHTML = "max " + value + "%";
-}
-
 function measurementsIntervalChange(value)
 {
-  document.getElementById("measurementsLbl").innerHTML = "Measurements interval : " + value + "s";
+  document.getElementById("measurementsLbl").innerHTML = value + "s";
 }
 
 async function writeTemps()
 {
   let sensorsWord = new Uint8Array(20);
   
-  tempMin = parseInt(document.getElementById("minTemp").value*10,10);
-  tempMax = parseInt(document.getElementById("maxTemp").value*10,10);
+  tempMin = parseInt(temp_sliderOne.value*10,10);
+  tempMax = parseInt(temp_sliderTwo.value*10,10);
 
-  humidityMin = parseInt(document.getElementById("minHumidity").value,10);
-  humidityMax = parseInt(document.getElementById("maxHumidity").value,10);
+  humidityMin = parseInt(hum_sliderOne.value,10);
+  humidityMax = parseInt(hum_sliderTwo.value,10);
 
   measurementsInterval = parseInt(document.getElementById("measurementsInt").value,10);
 
@@ -796,4 +794,44 @@ async function writeTemps()
   catch(error){
     console.log('Argh! ' + error);
   }
+}
+
+function tempSlideOne(){
+  if(parseInt(temp_sliderTwo.value) - parseInt(temp_sliderOne.value) <= temp_minGap){
+    temp_sliderOne.value = parseInt(temp_sliderTwo.value) - temp_minGap;
+  }
+  temp_displayValOne.textContent = parseFloat(temp_sliderOne.value).toFixed(1);
+  tempfillColor();
+}
+function tempSlideTwo(){
+  if(parseInt(temp_sliderTwo.value) - parseInt(temp_sliderOne.value) <= temp_minGap){
+    temp_sliderTwo.value = parseInt(temp_sliderOne.value) + temp_minGap;
+  }
+  temp_displayValTwo.textContent = parseFloat(temp_sliderTwo.value).toFixed(1);
+  tempfillColor();
+}
+function tempfillColor(){
+  percent1 = (temp_sliderOne.value / temp_sliderMaxValue) * 100;
+  percent2 = (temp_sliderTwo.value / temp_sliderMaxValue) * 100;
+  temp_sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
+}
+
+function humSlideOne(){
+  if(parseInt(hum_sliderTwo.value) - parseInt(hum_sliderOne.value) <= hum_minGap){
+    hum_sliderOne.value = parseInt(hum_sliderTwo.value) - hum_minGap;
+  }
+  hum_displayValOne.textContent = parseFloat(hum_sliderOne.value).toFixed(1);
+  humfillColor();
+}
+function humSlideTwo(){
+  if(parseInt(hum_sliderTwo.value) - parseInt(hum_sliderOne.value) <= hum_minGap){
+    hum_sliderTwo.value = parseInt(hum_sliderOne.value) + hum_minGap;
+  }
+  hum_displayValTwo.textContent = parseFloat(hum_sliderTwo.value).toFixed(1);
+  humfillColor();
+}
+function humfillColor(){
+  percent1 = (hum_sliderOne.value / hum_sliderMaxValue) * 100;
+  percent2 = (hum_sliderTwo.value / hum_sliderMaxValue) * 100;
+  hum_sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
 }
