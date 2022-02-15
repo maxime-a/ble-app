@@ -95,7 +95,18 @@
           <label id="maxTempLbl">max 25°C</label>
         </div>
         <div style="margin-top:10px;margin-bottom: 10px;">
-          
+          <label id="minHumidityLbl">Humidity : min 20%</label>
+          <input type="range" id="minHumidity"
+          min="0" max="100" value ="20" step="1" onchange="humidityMinChange(this.value);"></input>
+
+          <input type="range" id="maxHumidity"
+          min="0" max="100" value ="90" step="1" onchange="humidityMaxChange(this.value);"></input>
+          <label id="maxHumidityLbl">max 90%</label>
+        </div>
+        <div style="margin-top:10px;margin-bottom: 10px;">
+          <label id="measurementsLbl">Measurements interval : 1s</label>
+          <input type="range" id="measurementsInt"
+          min="1" max="300" value ="1" step="1" onchange="measurementsIntervalChange(this.value);"></input>
         </div>
       </div>
       <div class="col-2">

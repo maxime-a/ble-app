@@ -733,7 +733,26 @@ function tempMinChange(value)
 
 function tempMaxChange(value)
 {
-  document.getElementById("maxTempLbl").innerHTML = "max " + value + "°C";
+  if(value <= document.getElementById("minTemp").value)
+  {
+    document.getElementById("maxTemp").value = parseInt(document.getElementById("minTemp").value,10) + 1;
+  }
+  document.getElementById("maxTempLbl").innerHTML = "max " + document.getElementById("maxTemp").value + "°C";
+}
+
+function humidityMinChange(value)
+{
+  document.getElementById("minHumidityLbl").innerHTML = "Humidity : min " + value + "%";
+}
+
+function humidityMaxChange(value)
+{
+  document.getElementById("maxHumidityLbl").innerHTML = "max " + value + "%";
+}
+
+function measurementsIntervalChange(value)
+{
+  document.getElementById("measurementsLbl").innerHTML = "Measurements interval : " + value + "s";
 }
 
 async function writeTemps()
@@ -742,6 +761,11 @@ async function writeTemps()
   
   tempMin = parseInt(document.getElementById("minTemp").value*10,10);
   tempMax = parseInt(document.getElementById("maxTemp").value*10,10);
+
+  humidityMin = parseInt(document.getElementById("minHumidity").value,10);
+  humidityMax = parseInt(document.getElementById("maxHumidity").value,10);
+
+  measurementsInterval = parseInt(document.getElementById("measurementsInt").value,10);
 
   sensorsWord = await readSensors();
   console.log('Read');
@@ -755,7 +779,15 @@ async function writeTemps()
   sensorsWord[17] = tempMin/255;
   sensorsWord[18] = tempMin%255;
 
-  
+  //Humidity max
+  sensorsWord[13] = humidityMax;
+
+  //Humidity min
+  sensorsWord[14] = humidityMin;
+
+  //Measurements period
+  sensorsWord[19] = measurementsInterval;
+
   console.log('Resultat');
   console.log(sensorsWord);
   try{
