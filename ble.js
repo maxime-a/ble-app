@@ -15,6 +15,7 @@ var characteristicActuators;
 var characteristicCalendar;
 var characteristicPosition;
 var characteristicSensors;
+var characteristicGeneral;
 
 var tempTable;
 
@@ -26,6 +27,9 @@ let temp_minGap = 1;
 let temp_sliderTrack = document.getElementById("temp-slider-track");
 let temp_sliderMaxValue = document.getElementById("temp-slider-1").max;
 
+var tempMin=20;
+var tempMax=25;
+
 let hum_sliderOne = document.getElementById("hum-slider-1");
 let hum_sliderTwo = document.getElementById("hum-slider-2");
 let hum_displayValOne = document.getElementById("hum-range1");
@@ -34,11 +38,19 @@ let hum_minGap = 1;
 let hum_sliderTrack = document.getElementById("hum-slider-track");
 let hum_sliderMaxValue = document.getElementById("hum-slider-1").max;
 
+var humidityMin=20;
+var humidityMax=80;
+
 google.charts.load('current',{packages:['corechart']}).then(function(){
   tempTable = new google.visualization.DataTable();
   tempTable.addColumn('datetime', 'Time of Day');
   tempTable.addColumn('number', 'Temperature');
-  tempTable.addColumn('number', 'Humidity');});
+  tempTable.addColumn('number', 'Humidity');
+  tempTable.addColumn('number', 'Temperature Min');
+  tempTable.addColumn('number', 'Temperature Max');
+  tempTable.addColumn('number', 'Humidity Min');
+  tempTable.addColumn('number', 'Humidity Max');
+});
 //google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
@@ -53,8 +65,14 @@ function drawChart() {
         min:10
       }
     },
+    series:{
+      3:{lineDashStyle: [8, 8] },
+      4:{lineDashStyle: [8, 8] },
+      5:{lineDashStyle: [8, 8] },
+      2:{lineDashStyle: [8, 8] }
+    },
     curveType: 'function',
-    legend: 'none'
+    colors: ['#4cb500', '#002fb5', '#4cb500', '#4cb500','#002fb5', '#002fb5'],
   };
   // Draw
   var chart = new google.visualization.LineChart(document.getElementById('myChart'));
@@ -102,6 +120,10 @@ async function connect() {
         {
           characteristic.startNotifications();
           subscribeToChangesActuators(characteristic);
+        }
+        if(characteristic.uuid === "00000201-0000-1000-8000-00805f9b34fb")
+        {
+          characteristicGeneral=characteristic;
         }
         if(characteristic.uuid === "00000202-0000-1000-8000-00805f9b34fb")
         {
@@ -271,7 +293,7 @@ function handleDataMeasurements(event) {
   // get the data buffer from the meter:
   var buf = new Uint8Array(event.target.value.buffer);
   document.getElementById('measurementsNotify').innerHTML = "0x"+buf.toString();
-  tempTable.addRow([new Date(), ((buf[17]*255+buf[18])/10),buf[19]]);
+  tempTable.addRow([new Date(), ((buf[17]*255+buf[18])/10),buf[19],tempMin,tempMax,humidityMin,humidityMax]);
   drawChart();
 }
 
@@ -753,12 +775,23 @@ function measurementsIntervalChange(value)
   document.getElementById("measurementsLbl").innerHTML = value + "s";
 }
 
+function solPeriodChange(value)
+{
+  document.getElementById("periodLbl").innerHTML = value + "s";
+}
+
+function solDutyChange(value)
+{
+  document.getElementById("dutyLbl").innerHTML = value + "%";
+}
+
 async function writeTemps()
 {
   let sensorsWord = new Uint8Array(20);
+  let generalWord = new Uint8Array(6);
   
-  tempMin = parseInt(temp_sliderOne.value*10,10);
-  tempMax = parseInt(temp_sliderTwo.value*10,10);
+  tempMin = parseInt(temp_sliderOne.value,10);
+  tempMax = parseInt(temp_sliderTwo.value,10);
 
   humidityMin = parseInt(hum_sliderOne.value,10);
   humidityMax = parseInt(hum_sliderTwo.value,10);
@@ -770,12 +803,12 @@ async function writeTemps()
   console.log(sensorsWord);
 
   //Temp max
-  sensorsWord[15] = tempMax/255;
-  sensorsWord[16] = tempMax%255;
+  sensorsWord[15] = tempMax*10/255;
+  sensorsWord[16] = tempMax*10%255;
 
   //Temp min
-  sensorsWord[17] = tempMin/255;
-  sensorsWord[18] = tempMin%255;
+  sensorsWord[17] = tempMin*10/255;
+  sensorsWord[18] = tempMin*10%255;
 
   //Humidity max
   sensorsWord[13] = humidityMax;
@@ -786,10 +819,18 @@ async function writeTemps()
   //Measurements period
   sensorsWord[19] = measurementsInterval;
 
+  //Sol period
+  generalWord[4] = parseInt(document.getElementById("solPeriod").value,10);
+
+  //Sol duty
+  generalWord[5] = parseInt(document.getElementById("solDuty").value,10);
+
   console.log('Resultat');
   console.log(sensorsWord);
+  console.log(generalWord);
   try{
     await characteristicSensors.writeValue(sensorsWord);
+    await characteristicGeneral.writeValue(generalWord);
   }
   catch(error){
     console.log('Argh! ' + error);

@@ -126,11 +126,28 @@
             </div>
           </div>
 
+        <!-- Measurement interval -->
         <div style="margin-top:10px;margin-bottom: 10px;">
           <label>Measurements interval : </label>
           <input type="range" id="measurementsInt"
           min="1" max="300" value ="1" step="1" oninput="measurementsIntervalChange(this.value);"></input>
           <label id="measurementsLbl">1s</label>
+        </div>
+
+        <!--Solenoid interval -->
+        <div style="margin-top:10px;margin-bottom: 10px;">
+          <label>Solenoid period : </label>
+          <input type="range" id="solPeriod"
+          min="1" max="100" value ="3" step="1" oninput="solPeriodChange(this.value);"></input>
+          <label id="periodLbl">1s</label>
+        </div>
+
+        <!-- Solenoid duty -->
+        <div style="margin-top:10px;margin-bottom: 10px;">
+          <label>Solenoid duty cycle : </label>
+          <input type="range" id="solDuty"
+          min="1" max="100" value ="50" step="1" oninput="solDutyChange(this.value);"></input>
+          <label id="dutyLbl">50%</label>
         </div>
       </div>
       <div class="col-2">
