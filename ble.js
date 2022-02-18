@@ -167,6 +167,7 @@ function getSupportedProperties(characteristic) {
 function onPageLoad()
 {
   HTMLinit();
+  term_init();
 }
 
 function HTMLinit()
@@ -876,3 +877,116 @@ function humfillColor(){
   percent2 = (hum_sliderTwo.value / hum_sliderMaxValue) * 100;
   hum_sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
 }
+
+////////////////
+/* Web Serial */
+////////////////
+
+var term;
+
+function calculate_size(win) {
+    var cols = Math.max(80, Math.min(150, (win.innerWidth - 280) / 7)) | 0;
+    var rows = Math.max(24, Math.min(80, (win.innerHeight - 180) / 12)) | 0;
+    return [cols, rows];
+}
+
+function term_init()
+{
+    var size = calculate_size(self);
+    term = new Terminal({
+      cols: size[0],
+      rows: size[1],
+      useStyle: true,
+      screenKeys: true,
+      cursorBlink: false
+    });
+    term.open(document.getElementById("term"));
+    
+  window.addEventListener('resize', function() {
+      var size = calculate_size(self);
+      term.resize(size[0], size[1]);
+  });
+}
+
+
+/*
+ * Web Serial API (Google Chrome)
+ *
+ * Useful information used to this implementation:
+ * https://github.com/svendahlstrand/web-serial-api/
+ * https://dev.to/unjavascripter/the-amazing-powers-of-the-web-web-serial-api-3ilc
+ *
+ */
+
+const connectButton = document.getElementById ('SerialConnectButton');
+let port;
+
+if ('serial' in navigator) {
+  connectButton.addEventListener('click', function () {
+    if (port) {
+      term.write('\x1b[31mDisconnected from Serial Port\x1b[m\r\n');
+      port.close();
+      port = undefined;
+      connectButton.innerText = 'Connect';
+
+      document.getElementById('SerialSpeed').disabled = false;
+
+    }
+    else {
+      connectButton.innerText = 'Disconnect';
+      getReader();
+    }
+  });
+
+  connectButton.disabled = false;
+}
+else {
+  const error = document.createElement('p');
+  error.innerHTML = '<p>Support for Serial Web API not enabled. Please enable it using chrome://flags/ and enable Experimental Web Platform fetures</p>';
+
+}
+
+
+let lineBuffer = '';
+let latestValue = 0;
+
+async function serialWrite(data) {
+	encoder = new TextEncoder();
+	const dataArrayBuffer = encoder.encode(data);
+
+	if (port && port.writable) {
+		const writer = port.writable.getWriter();
+		writer.write(dataArrayBuffer);
+		writer.releaseLock();
+	}
+}
+
+async function getReader() {
+        port = await navigator.serial.requestPort({});
+	var e = document.getElementById("SerialSpeed");
+	var strSpd = e.options[e.selectedIndex].value;
+
+	var speed = parseInt(strSpd);
+	await port.open({ baudRate: [speed] });
+
+	document.getElementById('SerialSpeed').disabled = true;
+
+        connectButton.innerText = 'Disconnect';
+        term.write('\x1b[31mConnected using Web Serial API !\x1b[m\r\n');
+
+        const appendStream = new WritableStream({
+          write(chunk) {
+	    term.write(chunk);
+          }
+        });
+
+        port.readable
+          .pipeThrough(new TextDecoderStream())
+          .pipeTo(appendStream);
+
+
+	term.on('data', function(data) {
+            serialWrite(data);
+        });
+
+      }
