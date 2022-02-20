@@ -527,7 +527,7 @@ function setAlarm2()
 
 async function setTimes() {
   
-  let calendarWord = new Uint8Array(35);
+  let calendarWord = new Uint8Array(42);
 
   start1_hours = 0;
   end1_hours = 0;
@@ -901,7 +901,7 @@ function term_init()
       cursorBlink: false
     });
     term.open(document.getElementById("term"));
-    
+
   window.addEventListener('resize', function() {
       var size = calculate_size(self);
       term.resize(size[0], size[1]);
@@ -945,7 +945,6 @@ else {
   error.innerHTML = '<p>Support for Serial Web API not enabled. Please enable it using chrome://flags/ and enable Experimental Web Platform fetures</p>';
 
 }
-
 
 let lineBuffer = '';
 let latestValue = 0;
