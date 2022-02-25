@@ -699,6 +699,18 @@ async function setTimes() {
   
 }
 
+function disableAlarm1()
+{
+  document.getElementById('start1').value = "--:--:--";
+  document.getElementById('end1').value = "--:--:--";
+}
+
+function disableAlarm2()
+{
+  document.getElementById('start2').value = "--:--:--";
+  document.getElementById('end2').value = "--:--:--";
+}
+
 function convDayofWeek(dayNum)
 {
   var dayBit;
