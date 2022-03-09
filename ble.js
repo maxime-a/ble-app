@@ -248,6 +248,32 @@ async function pageInit() {
   let positionWord = new Uint8Array(8);
   positionWord = await readPosition();
 
+  let sensorsWord = new Uint8Array(20);
+  sensorsWord = await readSensors();
+  let generalWord = new Uint8Array(6);
+  generalWord = await readGeneral();
+
+  //Temp max
+  temp_sliderTwo.value = (sensorsWord[15]*255 + sensorsWord[16])/10;
+
+  //Temp min
+  temp_sliderOne.value = (sensorsWord[17]*255 + sensorsWord[18])/10;
+
+  //Humidity max
+  hum_sliderTwo.value = sensorsWord[13];
+
+  //Humidity min
+  hum_sliderOne.value = sensorsWord[14];
+
+  //Measurements period
+  document.getElementById("measurementsInt").value = sensorsWord[19];
+
+  //Sol period
+  document.getElementById("solPeriod").value = generalWord[4];
+
+  //Sol duty
+  document.getElementById("solDuty").value = generalWord[5];
+
 }
 
 // subscribe to changes from the meter:
@@ -354,6 +380,13 @@ async function readSensors(){
   let sensorsWord = new Uint8Array(value.buffer);
   console.log(sensorsWord);
   return sensorsWord;
+}
+
+async function readGeneral(){
+  var value = await characteristicGeneral.readValue();
+  let generalWord = new Uint8Array(value.buffer);
+  console.log(generalWord);
+  return generalWord;
 }
 
 // switchs handlers
@@ -816,12 +849,12 @@ async function writeTemps()
   console.log(sensorsWord);
 
   //Temp max
-  sensorsWord[15] = tempMax*10/255;
-  sensorsWord[16] = tempMax*10%255;
+  sensorsWord[16] = tempMax*10/255;
+  sensorsWord[15] = tempMax*10%255;
 
   //Temp min
-  sensorsWord[17] = tempMin*10/255;
-  sensorsWord[18] = tempMin*10%255;
+  sensorsWord[18] = tempMin*10/255;
+  sensorsWord[17] = tempMin*10%255;
 
   //Humidity max
   sensorsWord[13] = humidityMax;
@@ -837,6 +870,12 @@ async function writeTemps()
 
   //Sol duty
   generalWord[5] = parseInt(document.getElementById("solDuty").value,10);
+
+  //Netword ID
+  generalWord[2] = parseInt(document.getElementById("networkID").value,10);
+
+  //Machine ID
+  generalWord[3] = parseInt(document.getElementById("machineID").value,10);
 
   console.log('Resultat');
   console.log(sensorsWord);
