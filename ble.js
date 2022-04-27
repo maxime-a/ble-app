@@ -253,11 +253,23 @@ async function pageInit() {
   let generalWord = new Uint8Array(6);
   generalWord = await readGeneral();
 
-  //Temp max
-  temp_sliderTwo.value = (sensorsWord[15]*255 + sensorsWord[16])/10;
+  document.getElementById("networkID").value = generalWord[2]
+  document.getElementById("machineID").value = generalWord[3]
 
+  console.log("sensor word")
+  console.log(sensorsWord)
+  //Temp max
+  temp_sliderTwo.value = (sensorsWord[16]*255 + sensorsWord[15])/10;
+  temp_displayValTwo.textContent = parseFloat(temp_sliderTwo.value).toFixed(1);
+  tempfillColor();
+  console.log("temp max :")
+  console.log(temp_sliderTwo.value)
   //Temp min
-  temp_sliderOne.value = (sensorsWord[17]*255 + sensorsWord[18])/10;
+  temp_sliderOne.value = (sensorsWord[18]*255 + sensorsWord[17])/10;
+  temp_displayValOne.textContent = parseFloat(temp_sliderOne.value).toFixed(1);
+  tempfillColor();
+  console.log("temp min :")
+  console.log(temp_sliderOne.value)
 
   //Humidity max
   hum_sliderTwo.value = sensorsWord[13];
