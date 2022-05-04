@@ -144,7 +144,7 @@ async function connect() {
         }
       });
     }
-    
+    document.getElementById('button-connect').style.background = 'green';
     setTimeout(pageInit, 500); //Don't call immediatly that cause unknown GATT error on mobile
 
   } catch(error) {
@@ -167,7 +167,7 @@ function getSupportedProperties(characteristic) {
 function onPageLoad()
 {
   HTMLinit();
-  term_init();
+  //term_init();
 }
 
 function HTMLinit()
@@ -526,6 +526,8 @@ function disconnect() {
     myDevice.gatt.disconnect();
     document.getElementById('measurementsNotify').innerHTML = "0x????";
     document.getElementById('measurementsNotify').innerHTML = "0x????????????????????????????????????";
+    document.getElementById('button-connect').style.background = '#5E5DF0';
+    
   }
 }
 
