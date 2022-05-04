@@ -945,6 +945,7 @@ function humfillColor(){
 /* Web Serial */
 ////////////////
 
+/*
 var term;
 
 function calculate_size(win) {
@@ -970,7 +971,7 @@ function term_init()
       term.resize(size[0], size[1]);
   });
 }
-
+*/
 
 /*
  * Web Serial API (Google Chrome)
