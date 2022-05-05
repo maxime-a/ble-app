@@ -17,6 +17,8 @@ var characteristicPosition;
 var characteristicSensors;
 var characteristicGeneral;
 
+var mosquito;
+
 var tempTable;
 
 let temp_sliderOne = document.getElementById("temp-slider-1");
@@ -334,6 +336,9 @@ function handleDataMeasurements(event) {
   document.getElementById('measurementsNotify').innerHTML = "0x"+buf.toString();
   tempTable.addRow([new Date(), ((buf[17]*255+buf[18])/10),buf[19],tempMin,tempMax,humidityMin,humidityMax]);
   drawChart();
+  //Mosquito counter
+  mosquito = buf[12];
+  document.getElementById('mosquito-counter').innerHTML = "Mosquito counter : "+buf[12].toString();
 }
 
 // read buttons handlers
