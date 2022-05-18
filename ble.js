@@ -43,6 +43,9 @@ let hum_sliderMaxValue = document.getElementById("hum-slider-1").max;
 var humidityMin=20;
 var humidityMax=80;
 
+let filters = [];
+filters.push({namePrefix: "EcoTrap"});
+
 google.charts.load('current',{packages:['corechart']}).then(function(){
   tempTable = new google.visualization.DataTable();
   tempTable.addColumn('datetime', 'Time of Day');
@@ -88,10 +91,8 @@ async function connect() {
   try {
     console.log('Requesting any Bluetooth Device...');
     myDevice = await navigator.bluetooth.requestDevice({
-     // filters: [...] <- Prefer filters to save energy & show relevant devices.
-        acceptAllDevices: true,
+        filters,
         services: servicesNeeded,
-        name : 'EcoTrap',
         optionalServices : servicesNeeded});
     myDevice.addEventListener('gattserverdisconnected', disconnect);
     console.log('Connecting to GATT Server...');
