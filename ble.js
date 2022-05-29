@@ -91,7 +91,8 @@ async function connect() {
   try {
     console.log('Requesting any Bluetooth Device...');
     myDevice = await navigator.bluetooth.requestDevice({
-        filters,
+        //filters,
+        acceptAllDevices:true,
         services: servicesNeeded,
         optionalServices : servicesNeeded});
     myDevice.addEventListener('gattserverdisconnected', disconnect);
@@ -754,8 +755,8 @@ async function setTimes() {
 
 function disableAlarm1()
 {
-  document.getElementById('start1').value = "--:--:--";
-  document.getElementById('end1').value = "--:--:--";
+  document.getElementById('start1').value = "";
+  document.getElementById('end1').value = "";
 }
 
 function disableAlarm2()
